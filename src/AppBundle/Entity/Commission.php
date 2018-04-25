@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Commission
  *
  * @ORM\Table(name="commission", indexes={@ORM\Index(name="idMerchant", columns={"idMerchant"}), @ORM\Index(name="idUser", columns={"idUser"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CommissionRepository")
  */
 class Commission
 {

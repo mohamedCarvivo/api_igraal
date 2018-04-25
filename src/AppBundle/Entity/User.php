@@ -3,12 +3,15 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * User
  *
  * @ORM\Table(name="user")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks()
+ *
  */
 class User
 {
@@ -32,6 +35,7 @@ class User
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=64, nullable=true)
+     * @Serializer\Exclude()
      */
     private $password;
 
@@ -54,15 +58,15 @@ class User
      *
      * @ORM\Column(name="lastLogin", type="datetime", nullable=true)
      */
-    private $lastlogin = '0000-00-00 00:00:00';
+    private $lastlogin;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="creationDate", type="datetime", nullable=false)
+     *
      */
-    private $creationdate = 'CURRENT_TIMESTAMP';
-
+    private $creationdate;
 
 
     /**
@@ -217,5 +221,13 @@ class User
     public function getCreationdate()
     {
         return $this->creationdate;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->creationdate = new \DateTime();
     }
 }
