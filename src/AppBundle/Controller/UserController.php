@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\Date;
 
 class UserController extends  FOSRestController
 {
@@ -39,6 +40,26 @@ class UserController extends  FOSRestController
     /**
      * @param User $user
      *
+     * @REST\Post(
+     *     name="api_user_login",
+     *     path="user/login"
+     * )
+     * parameters={
+     *      {"name"="username", "dataType"="string", "required"=true, "description"="Your username"},
+     *      {"name"="password", "dataType"="string", "required"=true, "description"="Your password"},
+     *  }
+     * @Rest\View()
+     * @ParamConverter("user", converter="fos_rest.request_body")
+     *
+     */
+    public function loginAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+    }
+
+    /**
+     * @param User $user
+     *
      * @REST\Get(
      *     name="api_user_get",
      *     path="user/{userId}",
@@ -48,7 +69,7 @@ class UserController extends  FOSRestController
      * @ParamConverter("user", class="AppBundle:User",options={"mapping"={"userId":"id"}})
      *
      */
-    public function gettUserAction(User $user)
+    public function getUserAction(User $user)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -57,6 +78,8 @@ class UserController extends  FOSRestController
             "nbCommissions"=>$em->getRepository(Commission::class)->getNbCommissions($user)
         ];
 
-        return $this->view($result, Response::HTTP_OK);
+        $date = new \DateTime();
+
+        return $this->view($result, Response::HTTP_OK, ['Generation-Date' => $date->format('Ymd H:i:s')]);
     }
 }

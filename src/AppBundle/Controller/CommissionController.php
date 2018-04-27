@@ -33,6 +33,8 @@ class CommissionController extends FOSRestController
 
         $commissions = $em->getRepository(Commission::class)->findByIduser($user);
 
-        return $this->view($commissions, Response::HTTP_OK);
+        $date = new \DateTime();
+
+        return $this->view($commissions, Response::HTTP_OK, ['Generation-Date' => $date->format('Ymd H:i:s')]);
     }
 }
